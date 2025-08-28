@@ -153,38 +153,50 @@ const AttendancePage = () => {
     return distance // Distance in meters
   }
 
-  const verifyBiometric = async () => {
-    try {
-      // Check if the browser supports the Web Authentication API
-      if (!window.PublicKeyCredential) {
-        alert("Your browser doesn't support biometric authentication. Please use a different verification method.")
-        return
-      }
+  const verifyBiometric = () => {
+    return (async () => {
+      try {
+        // Ensure we're in the browser
+        if (typeof window === "undefined") return false
 
-      // Check if the device supports biometric authentication
-      const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
-      if (!available) {
-        alert("Your device doesn't support biometric authentication. Please use a different verification method.")
-        return
-      }
+        // Check browser support for WebAuthn
+        if (!("PublicKeyCredential" in window)) {
+          alert("Your browser doesn't support biometric authentication. Please use a different verification method.")
+          return false
+        }
 
-      // Request biometric verification
-      const credential = await navigator.credentials.get({
-        publicKey: {
-          challenge: new Uint8Array(32),
-          userVerification: "required",
-        },
-      })
+        // Check if a platform authenticator (Touch ID/Face ID/Windows Hello) is available
+        const available = await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
+        if (!available) {
+          alert("Your device doesn't support biometric authentication. Please use a different verification method.")
+          return false
+        }
 
-      if (credential) {
-        setBiometricVerified(true)
-        return true
+        // Create a random challenge
+        const challenge = new Uint8Array(32)
+        if (window.crypto && window.crypto.getRandomValues) {
+          window.crypto.getRandomValues(challenge)
+        }
+
+        // Request a credential assertion to verify the user locally (no server attestation here)
+        const credential = await navigator.credentials.get({
+          publicKey: {
+            challenge,
+            userVerification: "required",
+            timeout: 60000,
+          },
+        })
+
+        if (credential) {
+          setBiometricVerified(true)
+          return true
+        }
+      } catch (error) {
+        console.error("Biometric verification failed:", error)
+        alert("Biometric verification failed. Please try again.")
       }
-    } catch (error) {
-      console.error("Biometric verification failed:", error)
-      alert("Biometric verification failed. Please try again.")
-    }
-    return false
+      return false
+    })()
   }
 
   const startSelfieCapture = () => {
