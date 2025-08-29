@@ -5,9 +5,6 @@ import axios from "axios"
 
 const AuthContext = createContext()
 
-// ✅ Set your backend base URL here
-const API_BASE_URL = "https://qr-based-attendance-management-system-1.onrender.com"
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
@@ -21,7 +18,7 @@ export const AuthProvider = ({ children }) => {
       if (localStorage.token) {
         setAuthToken(localStorage.token)
         try {
-          const res = await axios.get(`${API_BASE_URL}/api/auth/me`)
+          const res = await axios.get("/api/auth/me")
           setUser(res.data.user)
           setProfile(res.data.profile)
           setIsAuthenticated(true)
@@ -53,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   // Register user
   const register = async (formData) => {
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, formData)
+      const res = await axios.post("/api/auth/register", formData)
 
       setAuthToken(res.data.token)
       await loadUser()
@@ -68,7 +65,7 @@ export const AuthProvider = ({ children }) => {
   // Login user
   const login = async (email, password) => {
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password })
+      const res = await axios.post("/api/auth/login", { email, password })
 
       setAuthToken(res.data.token)
       setUser(res.data)
@@ -88,7 +85,7 @@ export const AuthProvider = ({ children }) => {
   // Load user data
   const loadUser = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/auth/me`)
+      const res = await axios.get("/api/auth/me")
       setUser(res.data.user)
       setProfile(res.data.profile)
       setIsAuthenticated(true)
