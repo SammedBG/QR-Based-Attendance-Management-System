@@ -16,6 +16,7 @@ import GenerateQR from "./pages/teacher/GenerateQR"
 import Courses from "./pages/teacher/Courses"
 import Sessions from "./pages/teacher/Sessions"
 import SessionDetails from "./pages/teacher/SessionDetails"
+import Reports from "./pages/teacher/Reports"
 
 // Student pages
 import StudentDashboard from "./pages/student/Dashboard"
@@ -24,6 +25,7 @@ import AttendanceHistory from "./pages/student/AttendanceHistory"
 import AttendancePage from "./pages/student/AttendancePage"
 import EnrollCourses from "./pages/student/EnrollCourses"
 import SecuritySettings from "./pages/student/SecuritySettings"
+import StudentReports from "./pages/student/Reports"
 
 function App() {
   return (
@@ -76,6 +78,14 @@ function App() {
               </TeacherRoute>
             }
           />
+          <Route
+            path="/teacher/reports"
+            element={
+              <TeacherRoute>
+                <Reports />
+              </TeacherRoute>
+            }
+          />
 
           {/* Student Routes */}
           <Route
@@ -115,6 +125,14 @@ function App() {
             element={
               <StudentRoute>
                 <SecuritySettings />
+              </StudentRoute>
+            }
+          />
+          <Route
+            path="/student/reports"
+            element={
+              <StudentRoute>
+                <StudentReports />
               </StudentRoute>
             }
           />
