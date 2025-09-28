@@ -109,5 +109,6 @@ This completes our MERN stack implementation of the QR code attendance system. T
    - Context API for state management
    - Bootstrap for styling
    - QR code generation and scanning
+   - Also security
 
 The application allows teachers to create courses, generate QR codes for attendance sessions, and view attendance records. Students can scan QR codes to mark their attendance and view their attendance history.
